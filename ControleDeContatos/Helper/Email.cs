@@ -46,7 +46,7 @@ namespace ControleDeContatos.Helper
             }
             catch (Exception ex)
             {
-                // Gravar logo de erro ao enviar e-mail
+                // Gravar log de erro ao enviar e-mail
 
                 return false;
             }

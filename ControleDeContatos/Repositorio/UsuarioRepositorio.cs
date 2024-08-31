@@ -1,6 +1,7 @@
 ﻿using ControleDeContatos.Data;
 using ControleDeContatos.Helper;
 using ControleDeContatos.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ControleDeContatos.Repositorio
 {
@@ -30,7 +31,9 @@ namespace ControleDeContatos.Repositorio
 
         public List<UsuarioModel> BuscarTodos()
         {
-            return _context.Usuarios.ToList();
+            return _context.Usuarios
+                .Include(x => x.Contatos)
+                .ToList();
         }
 
         public UsuarioModel Adicionar(UsuarioModel usuario)
@@ -55,6 +58,28 @@ namespace ControleDeContatos.Repositorio
             usuarioDB.Email = usuario.Email;
             usuarioDB.Login = usuario.Login;
             usuarioDB.Perfil = usuario.Perfil;
+            usuarioDB.DataAtuailzacao = DateTime.Now;
+
+            _context.Usuarios.Update(usuarioDB);
+            _context.SaveChanges();
+
+            return usuarioDB;
+        }
+
+        public UsuarioModel AlterarSenha(AlterarSenhaModel alterarSenhaModel)
+        {
+            UsuarioModel usuarioDB = ListarPorId(alterarSenhaModel.Id);
+
+            if (usuarioDB == null)
+                throw new Exception("Houve um erro na atualização da senha, usuário não encontrado");
+
+            if (!usuarioDB.SenhaValida(alterarSenhaModel.SenhaAtual))
+                throw new Exception("Senha atual não confere.");
+
+            if (usuarioDB.SenhaValida(alterarSenhaModel.NovaSenha))
+                throw new Exception("Nova senha deve ser difentente da senha atual");
+
+            usuarioDB.SetNovaSenha(alterarSenhaModel.NovaSenha);
             usuarioDB.DataAtuailzacao = DateTime.Now;
 
             _context.Usuarios.Update(usuarioDB);

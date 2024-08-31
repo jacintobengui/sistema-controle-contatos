@@ -1,0 +1,32 @@
+﻿@model List<ContatoModel>
+
+<table class="display" style="width:100%" id="table-contatos-usuario">
+    <thead>
+        <tr>
+            <th class="text-start" scope="col">#</th>
+            <th scope="col">Nome</th>
+            <th scope="col">E-mail</th>
+            <th class="text-start" scope="col">Celular</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var contato in Model)
+            {
+                <tr>
+                    <td class="text-center" scope="row">@contato.Id</td>
+                    <td>@contato.Nome</td>
+                    <td>@contato.Email</td>
+                    <td class="text-center">@contato.Celular</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr class="odd">
+                <td valign="top" colspan="4">Nenhum contato encontrado</td>
+            </tr>
+        }
+    </tbody>
+</table>
