@@ -9,7 +9,7 @@ namespace ControleDeContatos.Data
         public BancoContext(DbContextOptions<BancoContext> options)
             : base(options)
         {
-            
+
         }
 
         public DbSet<ContatoModel> Contatos { get; set; }
@@ -20,6 +20,19 @@ namespace ControleDeContatos.Data
             modelBuilder.ApplyConfiguration(new ContatoMap());
 
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<UsuarioModel>().HasData(
+                new UsuarioModel
+                {
+                    Id = 1,
+                    Nome = "Adm",
+                    Login = "admin",
+                    Senha = "123456",
+                    Email = "admin@gmail.com",
+                    Perfil = Enums.PerfilEnum.Admin,
+                    DataCadastro = DateTime.Now
+                }
+            );
         }
     }
 }
